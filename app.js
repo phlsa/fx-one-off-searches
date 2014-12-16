@@ -81,7 +81,7 @@ searchField.addEventListener( 'keydown', function(e) {
 
     if ( e.key!=="Tab" ) {
       searchField.value = originalQuery;
-      inject( "Search <strong>"+ searchField.value +"</strong> on:", searchHeadline );
+      inject( "Search for <strong>"+ searchField.value +"</strong> with:", searchHeadline );
     }
 
     if ( e.key==="Down" || e.key==="Right" || e.key==="Tab" ) {
@@ -97,7 +97,7 @@ searchField.addEventListener( 'keydown', function(e) {
   if ( next.parentElement.id==="suggestion-container" ) {
     all(collect("li"), function(item) {item.classList.remove("half-active")});
     searchField.value = next.innerHTML;
-    inject( "Search <strong>"+ searchField.value +"</strong> on:", searchHeadline );
+    inject( "Search for <strong>"+ searchField.value +"</strong> with:", searchHeadline );
   } else {
     if (currentlyActive.parentElement.id==="suggestion-container") {
       currentlyActive.classList.add("half-active");
@@ -122,10 +122,11 @@ function bindHoverHandlers() {
         if (completedValue) {
           //pre.innerHTML = typedValue;
           //post.innerHTML = completedValue;
-          //inject( "Search <strong>"+ searchField.value +"</strong> on:", searchHeadline );
         }
       } else {
         pre.innerHTML = post.innerHTML = "";
+        console.log('bla');
+        inject( "Search for <strong>"+ searchField.value +"</strong> with "+ item.getAttribute('data-name'), searchHeadline );
       }
     });
   });
@@ -135,6 +136,7 @@ function bindHoverHandlers() {
 popup.addEventListener("mouseout", function(e) {
   all(collect("li"), function(item) {item.classList.remove("active")});
   pre.innerHTML = post.innerHTML = "";
+  inject( "Search for <strong>"+ searchField.value +"</strong> with:", searchHeadline );
 });
 
 
@@ -168,7 +170,7 @@ function updateSuggestions() {
   });
   inject( newHTML, suggestionContainer );
 
-  inject( "Search <strong>"+ searchField.value +"</strong> on:", searchHeadline );
+  inject( "Search for <strong>"+ searchField.value +"</strong> with:", searchHeadline );
 
   bindHoverHandlers();
 }
