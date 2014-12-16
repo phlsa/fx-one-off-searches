@@ -120,8 +120,8 @@ function bindHoverHandlers() {
         var fullValue = item.innerHTML;
         var completedValue = fullValue.toLowerCase().split(typedValue.toLowerCase())[1];
         if (completedValue) {
-          pre.innerHTML = typedValue;
-          post.innerHTML = completedValue;
+          //pre.innerHTML = typedValue;
+          //post.innerHTML = completedValue;
           //inject( "Search <strong>"+ searchField.value +"</strong> on:", searchHeadline );
         }
       } else {
