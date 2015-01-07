@@ -15,12 +15,14 @@ varify();
 
 // Typing
 searchField.addEventListener( 'keyup', function(e) {
+  var key = sanitizeKeyCode(e.key);
+
   if ( searchField.value !== '' ) {
     popup.style.display = "block";
   } else {
     popup.style.display = "none";
   }
-  if ( !contains( ["Up", "Down", "Left", "Right", "Tab"], e.key ) ) {
+  if ( !contains( ["Up", "Down", "Left", "Right", "Tab"], key ) ) {
     originalQuery = searchField.value;
     updateSuggestions();
   }
@@ -31,9 +33,12 @@ searchField.addEventListener( 'keyup', function(e) {
 // Navigating
 searchField.addEventListener( 'keydown', function(e) {
   pre.innerHTML = post.innerHTML = "";
+
+  // reassign key to match legacy implementation
+  var key = sanitizeKeyCode(e.key);
   
   // Abort if the pressed key is not a navigation key
-  if ( !contains(["Up", "Down", "Left", "Right", "Tab"], e.key) ) {
+  if ( !contains(["Up", "Down", "Left", "Right", "Tab"], key) ) {
     return;
   }
 
@@ -42,15 +47,16 @@ searchField.addEventListener( 'keydown', function(e) {
   var next = null;
 
   // Navigating
-  if ( contains( ["Up", "Down", "Left", "Right"], e.key ) ) {
-    next = maybe(e.key==="Down" || e.key==="Right", 
+  if ( contains( ["Up", "Down", "Left", "Right"], key ) ) {
+    
+    next = maybe(key==="Down" || key==="Right", 
                      currentlyActive.nextElementSibling, 
                      currentlyActive.previousElementSibling);
 
   }
 
   // Tab navigation
-  if ( e.key === "Tab" ) {
+  if ( key === "Tab" ) {
     e.preventDefault();
     if ( currentlyActive.parentElement.id==="suggestion-container" || !currentlyActive.nextElementSibling ) {
       leavingCurrentRange = true;
@@ -79,12 +85,12 @@ searchField.addEventListener( 'keydown', function(e) {
       nextSection = suggestionContainer;
     }
 
-    if ( e.key!=="Tab" ) {
+    if ( key!=="Tab" ) {
       searchField.value = originalQuery;
       inject( "Search for <strong>"+ searchField.value +"</strong> with:", searchHeadline );
     }
 
-    if ( e.key==="Down" || e.key==="Right" || e.key==="Tab" ) {
+    if ( key==="Down" || key==="Right" || key==="Tab" ) {
       next = nextSection.children[0];
     } else {
       next = nextSection.children[nextSection.children.length-1];
@@ -125,7 +131,6 @@ function bindHoverHandlers() {
         }
       } else {
         pre.innerHTML = post.innerHTML = "";
-        console.log('bla');
         inject( "Search for <strong>"+ searchField.value +"</strong> with "+ item.getAttribute('data-name'), searchHeadline );
       }
     });
@@ -177,6 +182,14 @@ function updateSuggestions() {
 
 
 
+
+function sanitizeKeyCode(key) {
+  if (key === "ArrowUp") key = "Up";
+  if (key === "ArrowDown") key = "Down";
+  if (key === "ArrowLeft") key = "Left";
+  if (key === "ArrowRight") key = "Right";
+  return key;
+}
 
 function collect(selector) {
   return document.querySelectorAll( selector );
